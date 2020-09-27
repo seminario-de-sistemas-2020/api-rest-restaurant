@@ -20,6 +20,7 @@ app.use(bodyParser.json())
 
 app.use('/api/v0.1/', services);
 
+app.use(express.static(__dirname+'/public'))
 
 
 

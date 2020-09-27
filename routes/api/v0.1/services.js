@@ -4,6 +4,8 @@ const express = require('express');
 const route = express.Router();
 const connect = require('../../../database/collection/connect');
 const auth = require('../../../middlewares/auth')
+const Restaurant = require('./restaurant');
+const ApiInfo = require('./apiInfo');
 
 
 route.get('/', (req, res, next)=>{
@@ -19,6 +21,23 @@ route.post('/token',auth,(req, res)=>{
 
 
 
+// CREATE RESTAURANTS
+route.post('/restaurant', Restaurant.createRstaurant);
+// file puede ser el logo o fotolugar
+route.post('/restaurant/upload/file=:file/idrestaurant=:idrestaurant', Restaurant.uploadLogo);
+
+route.patch('/restaurant/upload/localtion/idrestaurant=:idrestaurant', Restaurant.uploadLocation)
+
+route.get('/restaurant/list/all',Restaurant.listarRestaurants);
+
+route.delete('/restaurant/delete/idrestaurant=:idrestaurant', Restaurant.deleteRestaurant)
+
+
+
+
+
+// api-info
+route.get('/info', ApiInfo);
 
 
 
