@@ -11,7 +11,7 @@ const createRstaurant = async (req, res)=>{
             nit: req.body.nit,
             propietario: req.body.propietario,
             calle: req.body.calle,
-            tefefono: req.body.telefono,
+            telefono: req.body.telefono,
             log: 0,
             lat: 0,
             logo: '',
@@ -87,10 +87,30 @@ const deleteRestaurant =(req, res)=>{
 }
 
 
-const updateDataRestaurant = (req, res) => {
-
+const updateDataRestaurant = async (req, res) => {
     
+    var result = await Restaurant.restaurant.findById({_id:req.params.idrestaurant});
+    if(!result) return res.status(400).send({error: 'ID restaurante no valido'});
+    if(result){
 
+        console.log(result)
+        console.log(req.body)
+       var nombre      = req.body.nombre!=undefined && req.body.nombre!= ''?req.body.nombre:result.nombre;
+       var nit         = req.body.nit!=undefined && req.body.nit!=''?req.body.nit:result.nit;
+       var propietario = req.body.propietario!=undefined && req.body.propietario!=''?req.body.propietario:result.propietario;
+       var calle       = req.body.calle!=undefined && req.body.calle!=''?req.body.calle:result.calle;
+       var telefono    = req.body.telefono!=undefined && req.body.telefono!=''?req.body.telefono:result.telefono;
+
+       Restaurant.restaurant.findByIdAndUpdate({_id:req.params.idrestaurant},{nombre,nit, propietario, calle, telefono},async (error, data)=>{
+           if(error) return res.status(400).send({error:'Error en la actualizacion de los datos'});
+           if(!data) return res.status(400).send({error: 'idrestaurant no valido'});
+           if(data){
+               var  newResul = await Restaurant.restaurant.findById({_id:req.params.idrestaurant});
+               console.log(newResul)
+               res.status(200).send({message:'datos actualizados',restaurant:newResul});
+           }
+       })
+    }
 }
 
 
@@ -100,5 +120,6 @@ module.exports = {
     uploadLogo,
     uploadLocation,
     listarRestaurants,
-    deleteRestaurant
+    deleteRestaurant,
+    updateDataRestaurant
 }

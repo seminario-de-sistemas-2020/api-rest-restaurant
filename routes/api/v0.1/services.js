@@ -32,7 +32,7 @@ route.get('/restaurant/list/all',Restaurant.listarRestaurants);
 
 route.delete('/restaurant/delete/idrestaurant=:idrestaurant', Restaurant.deleteRestaurant)
 
-
+route.patch('/restaurant/update/data/idrestaurant=:idrestaurant',Restaurant.updateDataRestaurant)
 
 
 
