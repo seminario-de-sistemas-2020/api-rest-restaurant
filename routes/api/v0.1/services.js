@@ -6,6 +6,7 @@ const connect = require('../../../database/collection/connect');
 const auth = require('../../../middlewares/auth')
 const Restaurant = require('./restaurant');
 const ApiInfo = require('./apiInfo');
+const Menu = require('./menu');
 
 
 route.get('/', (req, res, next)=>{
@@ -34,6 +35,14 @@ route.delete('/restaurant/delete/idrestaurant=:idrestaurant', Restaurant.deleteR
 
 route.patch('/restaurant/update/data/idrestaurant=:idrestaurant',Restaurant.updateDataRestaurant)
 
+
+
+// ::::::::MENU:::::::::::
+route.post('/menu/create/idrestaurant=:idrestaurant',Menu.createMenu);
+   // file=fotoproducto
+route.patch('/menu/upload/fotoproduct/file=:file/idmenu=:idmenu', Menu.uploatFotoProducto);
+
+route.put('/menu/update/data/idmenu=:idmenu', Menu.updateDataMenu);
 
 
 // api-info
