@@ -91,7 +91,15 @@ const showListAllMenuOfResturant = async (req, res) =>{
                              });
     }
    
+}
 
+
+
+const ShowOneMenu = async (req, res)=>{
+    
+    var menu = await Menu.menu.findById({_id:req.params.idmenu})
+    if(!menu) return res.status(400).send({error:' Menu no encontrando', message:'No se puede mostrar el menu, revise el idmenu'}) 
+    res.status(200).send({message:'ok', menu})
 }
 
 
@@ -99,5 +107,6 @@ module.exports = {
     createMenu,
     uploatFotoProducto,
     updateDataMenu,
-    showListAllMenuOfResturant
+    showListAllMenuOfResturant,
+    ShowOneMenu
 }

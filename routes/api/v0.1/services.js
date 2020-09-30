@@ -7,6 +7,7 @@ const auth = require('../../../middlewares/auth')
 const Restaurant = require('./restaurant');
 const ApiInfo = require('./apiInfo');
 const Menu = require('./menu');
+const User = require('./users');
 
 
 route.get('/', (req, res, next)=>{
@@ -20,6 +21,11 @@ route.post('/token',auth,(req, res)=>{
     res.status(200).send({message: 'acceso permitido, token valido'})
 })
 
+// :::USERS::::
+
+route.post('/user/new', User.addUser);
+
+route.patch('/user/upload/avatar/file=:file/iduser=:iduser', User.uploadPhotoAvatar)
 
 
 // CREATE RESTAURANTS
@@ -45,6 +51,14 @@ route.patch('/menu/upload/fotoproduct/file=:file/idmenu=:idmenu', Menu.uploatFot
 route.put('/menu/update/data/idmenu=:idmenu', Menu.updateDataMenu);
 
 route.get('/menu/show/list/all/idrestaurant=:idrestaurant&order=:order', Menu.showListAllMenuOfResturant);
+
+route.get('/menu/show/idmenu=:idmenu', Menu.ShowOneMenu);
+
+
+
+// ::::ORDENES :::::
+// route.post
+
 
 
 // api-info

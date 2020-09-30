@@ -7,6 +7,7 @@ const ConfigApi = require('../config/configApi.json');
 const File = require('../database/collection/fille');
 const Restaurant = require('../database/collection/restaurant');
 const Menu  = require('../database/collection/menu');
+const User = require('../database/collection/user');
 
 
 
@@ -125,8 +126,50 @@ const uploadFileFotoProducto = (req, res)=>{
 
 
 
+const uploadPhotoAvatar = (req, res)=>{
+    
+    upload(req, res,async(err)=>{
+        console.log('arrived photo avatar');
+        console.log(req.file)
+        if(!req.file)return res.status(400).send({error:'file is requered for fotoproducto'})
+        console.log(req.params.iduser)
+        console.log(req.params.file)
+        if(err) return res.status(400).send({ error: 'error al guardar el archivo'});
+
+        var ruta = req.file.path.substr(6);
+        var existUser = await User.user.findById({_id:req.params.iduser});
+        if(!existUser) res.status(400).send({error: 'Id de usuario no existente'});
+        console.log(existUser);
+        if(existUser){
+
+            var newFile = new File.file({
+                idParent:    req.params.iduser,
+                nameParent:  req.params.file,
+                nameFile:    req.file.filename,
+                physicalPath: req.file.path,
+                relativePath: ConfigApi.configApi[0].hostApi,    //  http://localhost:9000/
+                linkFile:    ConfigApi.configApi[0].hostApi + ruta, 
+                size:        req.file.size  
+            });
+
+            newFile.save(async(err, data)=>{
+                if(req.params.file==="avatar"){
+                    var fotoAvatar =await  data.linkFile;
+                    var u=await User.user.findOneAndUpdate({_id:req.params.iduser},{fotoAvatar})
+                    var newRest = await User.user.findById({_id:req.params.iduser})
+                 //    console.log(u) 
+                    res.status(200).send({message:"ok",updateFotoAvatar:true,user:newRest})
+                }
+            })
+            console.log(newFile)
+        }
+    })
+}
+
+
 
 module.exports = {
     uploadFile,
-    uploadFileFotoProducto
+    uploadFileFotoProducto,
+    uploadPhotoAvatar
 }

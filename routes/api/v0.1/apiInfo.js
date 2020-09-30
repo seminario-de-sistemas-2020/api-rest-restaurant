@@ -66,6 +66,42 @@ const ApiInfo =(req, res)=>{
                 method: 'PUTCH',
                 example: 'localhost:9000/api/v0.1/menu/upload/fotoproduct/file=fotoproducto/idmenu=5f725b47097c3a0326f7d83c',
                 body: 'type file: image ---> form-data'
+            },
+            {
+                3: 'muestra toda lista de menus pertenecientes a un restaurante',
+                enpoint:'/menu',
+                host: '/menu/show/list/all/idrestaurant=:idrestaurant&order=:order',
+                Method: 'GET',
+                example : 'localhost:9000/api/v0.1/menu/show/list/all/idrestaurant=5f70ededc84dc3010e7dea24&order=desc',
+                nota: 'params.order: desc 0´ asc'
+            },
+            {
+                4: 'Muestra los datos de un menu (idmenu)',
+                enpoint: '/menu',
+                host: '/menu/show/idmenu=:idmenu',
+                Method: 'GET',
+                example: 'localhost:9000/api/v0.1/menu/show/idmenu=5f725b47097c3a0326f7d83c'
+
+
+            },
+            {
+                USER: ':::::::::::::::::::'
+            },{
+                1: 'create new user',
+                endpoint: '/user',
+                Method: 'POST',
+                host: '/user/new',
+                example: 'localhost:9000/api/v0.1/user/new',
+                body: 'name, lastName, email, password, phoneNumber'
+
+            },{
+                2: 'upload foto de avatar',
+                enpoint: '/user',
+                Method: 'PATCH',
+                host: '/user/upload/avatar/file=:file/iduser=:iduser',
+                example: 'localhost:9000/api/v0.1/user/upload/avatar/file=avatar/iduser=5f75082d6417ad04462dc056',
+                paramas: 'file=avatar, iduer=iduser',
+                body:'form-data --> key: image'
             }
         ]
     )
