@@ -57,7 +57,7 @@ const updateDataMenu = async (req, res)=>{
             if(error) return res.status(400).send({error: `error en la actualizaion del menu : ${result.nombre} `});
             if(newData){
                var menuUpdated = await Menu.menu.findById({_id:req.params.idmenu});
-               res.status(200).send({message: 'ok',menu:menuUpdated});
+               res.status(200).send({message: 'ok',menuUpdeted:menuUpdated});
             }
         })
         
@@ -66,9 +66,38 @@ const updateDataMenu = async (req, res)=>{
 }
 
 
+const showListAllMenuOfResturant = async (req, res) =>{
+
+    var order = await  req.params.order ==='desc'? "desc" : "asc";
+    var o = await  order==="desc"?(-1):1;
+    try{
+        const result = await Menu.menu.find({idRestaurant:req.params.idrestaurant}).sort({fechaRegistro:order});
+        const restaurant = await Restaurant.restaurant.findById({_id:req.params.idrestaurant});
+        if(!result)return res.status(400).send({error:'datos de no ecnotrado'});
+        res.status(200).send({
+            message: 'ok',
+            nameRestaurant: restaurant.nombre,
+            idRestaurant: restaurant._id,
+            results: result.length,
+            listMenu:result
+
+        })
+    }
+    catch(err){
+        console.log('error la mostrar la lista de menus->func showListAllMenuOfResturant');
+        res.status(400).send({
+                                error:'Error al acceder a la lista de menus',
+                                message:'Revisa el idrestaurant y el order -desc,-asc'
+                             });
+    }
+   
+
+}
+
 
 module.exports = { 
     createMenu,
     uploatFotoProducto,
-    updateDataMenu
+    updateDataMenu,
+    showListAllMenuOfResturant
 }

@@ -44,6 +44,8 @@ route.patch('/menu/upload/fotoproduct/file=:file/idmenu=:idmenu', Menu.uploatFot
 
 route.put('/menu/update/data/idmenu=:idmenu', Menu.updateDataMenu);
 
+route.get('/menu/show/list/all/idrestaurant=:idrestaurant&order=:order', Menu.showListAllMenuOfResturant);
+
 
 // api-info
 route.get('/info', ApiInfo);
