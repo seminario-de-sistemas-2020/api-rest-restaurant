@@ -8,6 +8,7 @@ const createRstaurant = async (req, res)=>{
         // console.log(req.body)
         var newRestaurant = new Restaurant.restaurant({
             nombre: req.body.nombre,
+            idClient : req.params.idcliente!=undefined && req.params.idcliente!=''?req.params.idcliente : '',
             nit: req.body.nit,
             propietario: req.body.propietario,
             calle: req.body.calle,
@@ -25,7 +26,7 @@ const createRstaurant = async (req, res)=>{
        const nit = await Restaurant.restaurant.find({nit:req.body.nit});
        if(nombre.length>0){
            console.log('nombre existente')
-            return res.status(400).send({message:'nombre existente'})
+            return res.status(400).send({error:'No se puede crear el restaurant',message:'nombre de reaaturant existente'})
             
        }
        if(nit.length>0){

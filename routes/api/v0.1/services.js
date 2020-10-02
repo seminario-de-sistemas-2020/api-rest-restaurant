@@ -8,6 +8,7 @@ const Restaurant = require('./restaurant');
 const ApiInfo = require('./apiInfo');
 const Menu = require('./menu');
 const User = require('./users');
+const Order = require('./ordenes');
 
 
 route.get('/', (req, res, next)=>{
@@ -57,8 +58,11 @@ route.get('/menu/show/idmenu=:idmenu', Menu.ShowOneMenu);
 
 
 // ::::ORDENES :::::
-// route.post
+// route.get('')
+route.post('/order/add/idcliente=:idcliente', Order.newOrder)
 
+route.get('/order/list/all',Order.listAllOders)
+route.get('/order/list/idcliente=:idcliente', Order.listOrderForIdCliente )
 
 
 // api-info

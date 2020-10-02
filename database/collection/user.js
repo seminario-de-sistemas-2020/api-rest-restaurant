@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const NewUser = {
+const NewUser = new Schema({
     name       : String,
     lastName  : String,
     email      : String,
@@ -16,7 +16,7 @@ const NewUser = {
         default: 'client'
     },
     DateCreatedAcount: {type:Date, default: Date.now}
-}
+})
 
 var user = mongoose.model('users', NewUser);
 
