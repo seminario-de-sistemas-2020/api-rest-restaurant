@@ -1,8 +1,9 @@
 'use strict'
 
-const { Router } = require('express');
 const Order = require('../../../database/collection/orden');
 const User = require('../../../database/collection/user');
+const Restaurnte = require('../../../database/collection/restaurant');
+
 
 
 const newOrder = async (req, res) => {
@@ -55,15 +56,42 @@ const modiforder = (req, res) =>{
 
 }
 
+// muestra lalista de ordenes por idcliente 
 const listOrderForIdCliente = async (req, res) =>{
     var listMenu =  await Order.orden.find({idCliente:req.params.idcliente});
     if(listMenu.length==0) return res.status(200).send({ok:'no tenes ninguna orden',results:listMenu.length,orders:listMenu});
     if(listMenu.length>0){
         var sum=0;
         var precioTotal = await listMenu.map((d,i)=>{
-            sum=sum+(d.precio*d.cantidad);
+            // if(d.stateSaldo==='sincancelar'){
+
+                sum=sum+(d.precio*d.cantidad);
+            // }
         })
         return res.status(200).send({ok:'lista de la orden',results:listMenu.length,orders:listMenu, saldoTotal: sum})
+    }
+    
+}
+
+const listOrderForIderestaurant = async (req, res) =>{
+
+    var IDRESTAURANT = req.params.idrestaurante;
+    try{
+        var resulLits = await Order.orden.find({idRestaurant: IDRESTAURANT});
+        if(resulLits.length===0) return res.status(200).send({ok: 'El resturante no tiene ninguna orden', results: resulLits.length});
+        if(resulLits.length>0){
+            var restaurante = await Restaurnte.restaurant.findById({_id:IDRESTAURANT})
+            res.status(200).send({
+                ok:'Peticcion ejecutada exitomente',
+                results:resulLits.length,
+                idRestaurant: IDRESTAURANT,
+                nameRestaurat: restaurante.nombre,
+                restaurant:resulLits
+            })
+        }
+    }
+    catch(err){
+
     }
 }
 
@@ -86,5 +114,6 @@ const listAllOders = async (req, res) =>{
 module.exports = {
     newOrder,
     listAllOders,
-    listOrderForIdCliente
+    listOrderForIdCliente,
+    listOrderForIderestaurant
 }

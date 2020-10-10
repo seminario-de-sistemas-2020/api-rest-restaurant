@@ -64,6 +64,9 @@ route.post('/order/add/idcliente=:idcliente', Order.newOrder)
 route.get('/order/list/all',Order.listAllOders)
 route.get('/order/list/idcliente=:idcliente', Order.listOrderForIdCliente )
 
+// mostrar todos las ordenes ded cada restaurante
+route.get('/order/list/idrestaurante=:idrestaurante', Order.listOrderForIderestaurant)
+
 
 // api-info
 route.get('/info', ApiInfo);
