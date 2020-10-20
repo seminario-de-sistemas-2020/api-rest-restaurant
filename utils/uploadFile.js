@@ -130,7 +130,9 @@ const uploadPhotoAvatar = (req, res)=>{
     
     upload(req, res,async(err)=>{
         console.log('arrived photo avatar');
+
         console.log(req.file)
+        //console.log(req);
         if(!req.file)return res.status(400).send({error:'file is requered for fotoproducto'})
         console.log(req.params.iduser)
         console.log(req.params.file)

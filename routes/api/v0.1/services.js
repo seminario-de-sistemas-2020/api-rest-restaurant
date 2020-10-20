@@ -28,6 +28,8 @@ route.post('/user/new', User.addUser);
 
 route.patch('/user/upload/avatar/file=:file/iduser=:iduser', User.uploadPhotoAvatar)
 
+route.post('/user/login', User.LogIn);
+
 
 // CREATE RESTAURANTS
 route.post('/restaurant', Restaurant.createRstaurant);
@@ -37,6 +39,8 @@ route.post('/restaurant/upload/file=:file/idrestaurant=:idrestaurant', Restauran
 route.patch('/restaurant/upload/localtion/idrestaurant=:idrestaurant', Restaurant.uploadLocation)
 
 route.get('/restaurant/list/all',Restaurant.listarRestaurants);
+
+route.get('/restaurant/list/for/idowner=:idowner', Restaurant.listartRestaurntesForId);
 
 route.delete('/restaurant/delete/idrestaurant=:idrestaurant', Restaurant.deleteRestaurant)
 

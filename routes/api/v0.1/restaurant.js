@@ -8,7 +8,7 @@ const createRstaurant = async (req, res)=>{
         // console.log(req.body)
         var newRestaurant = new Restaurant.restaurant({
             nombre: req.body.nombre,
-            idClient : req.params.idcliente!=undefined && req.params.idcliente!=''?req.params.idcliente : '',
+            idClient : req.body.idcliente!=undefined && req.body.idcliente!=''?req.body.idcliente : '',
             nit: req.body.nit,
             propietario: req.body.propietario,
             calle: req.body.calle,
@@ -74,7 +74,19 @@ const uploadLocation =  (req, res) =>{
 const listarRestaurants = async (req, res)=>{
     
     var restaurants = await Restaurant.restaurant.find({}).sort({fechaDeRegistro:1})
-    return res.status(200).send({results:restaurants.length,restaurants});
+    return res.status(200).send({message:"ok",results:restaurants.length,restaurants});
+}
+
+const listartRestaurntesForId = async (req, res) => {
+    console.log(req.params)
+    try {
+        
+        var restaurants = await Restaurant.restaurant.find({idClient:req.params.idowner}).sort({fechaDeRegistro:1});
+        res.status(200).send({message:"ok",results:restaurants.length, restaurants})
+    } catch (error) {
+        res.status(400).send({error:"error en la consulta"});
+    }
+    
 }
 
 
@@ -121,6 +133,7 @@ module.exports = {
     uploadLogo,
     uploadLocation,
     listarRestaurants,
+    listartRestaurntesForId,
     deleteRestaurant,
     updateDataRestaurant
 }
