@@ -77,6 +77,7 @@ const listarRestaurants = async (req, res)=>{
     return res.status(200).send({message:"ok",results:restaurants.length,restaurants});
 }
 
+
 const listartRestaurntesForId = async (req, res) => {
     console.log(req.params)
     try {

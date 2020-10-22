@@ -1,14 +1,94 @@
 'use strict'
 
 const Order = require('../../../database/collection/orden');
+const OrderTemporal = require('../../../database/collection/ordenTeporal');
 const User = require('../../../database/collection/user');
 const Restaurnte = require('../../../database/collection/restaurant');
 
+// add orden temporal
+const addOrderTemporal = async (req, res) =>{
+
+    console.log(req.body);
+    var idClient  = req.params.idClient;
+    var results = await OrderTemporal.orderTemporal.find({idClient:idClient});
+    if(results.length === 0){
+        
+        let newOrder = new OrderTemporal.orderTemporal({
+            idMenu         : req.body.idMenu,      
+            idClient       : req.params.idClient,       
+            idRestaurant   : req.body.idRestaurant,
+            nameMenu       : req.body.nameMenu,
+            precioUnitario : req.body.precioUnitario,
+            fotoProducto   : req.body.urlFotoProducto,
+            cantidad       : 0, 
+            precio_cantidad_tocal : 0
+            
+        })
+
+        newOrder.save(( err , result )=>{
+            if(err) return res.status(400).send({error:'Error al agregar el pedido, orden no valida'});
+            if(result){
+                res.status(200).send({message:'agregado ok', result })
+            }
+        })
+    };
 
 
+    if( results.length > 0 ){
+        
+        var searchMenu = await OrderTemporal.orderTemporal.find({idMenu: req.body.idMenu});
+
+           if(searchMenu.length > 0) return res.status(200).send({message:"El menu ya fue añadido"});
+
+            if(searchMenu.length === 0){
+                let newOrder2 = new OrderTemporal.orderTemporal({
+                    idMenu         : req.body.idMenu,      
+                    idClient       : req.params.idClient,       
+                    idRestaurant   : req.body.idRestaurant,
+                    nameMenu       : req.body.nameMenu,
+                    precioUnitario : req.body.precioUnitario,
+                    fotoProducto   : req.body.urlFotoProducto,
+                    cantidad       : 0, 
+                    precio_cantidad_tocal : 0
+                    
+                })
+
+                newOrder2.save(( err2 , result2 )=>{
+                    if(err2) return res.status(400).send({error:'Error al agregar el pedido, orden no valida'});
+                    if(result2){
+                       return res.status(200).send({message:'agregado ok', result2 })
+                    
+                    }
+                })
+            }
+        
+    }
+    
+
+} 
+
+
+
+const showAllMenusforUser = async (req , res) =>{
+
+    var IDCLIENT = req.params.idClient
+
+    try {
+        var results = await OrderTemporal.orderTemporal.find({idClient: req.params.idClient}).sort({dateOrderTempora:-1});
+        if(results.length > 0) {
+            res.status(400).send({message:'ok',idClient: IDCLIENT, results:results.length,litsOrdenes:results})
+        }
+    } catch (error) {
+        res.status(400).send({error: "error en la consulta de las orddenes"});
+    }
+}
+
+
+// confirmar pedido  y agegar a nueva order
 const newOrder = async (req, res) => {
 
     var idcliente = await req.params.idcliente != undefined && req.params.idcliente!=''? req.params.idcliente : '';
+
     try {
         var resultUser = await User.user.findById({_id:idcliente});
         if(!resultUser) return res.status(400).send({error:'idcliente no existente'});
@@ -73,6 +153,7 @@ const listOrderForIdCliente = async (req, res) =>{
     
 }
 
+
 const listOrderForIderestaurant = async (req, res) =>{
 
     var IDRESTAURANT = req.params.idrestaurante;
@@ -112,6 +193,8 @@ const listAllOders = async (req, res) =>{
 
 
 module.exports = {
+    addOrderTemporal,
+    showAllMenusforUser,
     newOrder,
     listAllOders,
     listOrderForIdCliente,

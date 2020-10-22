@@ -14,7 +14,7 @@ const Orden  = new Schema({
     precio       : Number,
     stateSaldo   : { type: String, emun:['sincancelar','cancelado'], default:'sincancelar'},
     stateOrden   : { type:String, emun:['espera', 'proceso', 'enviado'], default:'espera' },
-    dateOrder    : { type: Date, default:Date.now},
+    dateOrder    : { type: Date, default:Date.now}
 
 });
 

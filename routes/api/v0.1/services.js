@@ -62,7 +62,12 @@ route.get('/menu/show/idmenu=:idmenu', Menu.ShowOneMenu);
 
 
 // ::::ORDENES :::::
-// route.get('')
+route.post('/order/add/temporal/idClient=:idClient', Order.addOrderTemporal)
+
+route.get('/order/show/all/list/idClient=:idClient', Order.showAllMenusforUser);
+
+// end order temporal
+
 route.post('/order/add/idcliente=:idcliente', Order.newOrder)
 
 route.get('/order/list/all',Order.listAllOders)
