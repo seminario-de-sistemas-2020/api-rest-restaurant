@@ -64,8 +64,11 @@ route.get('/menu/show/idmenu=:idmenu', Menu.ShowOneMenu);
 // ::::ORDENES :::::
 route.post('/order/add/temporal/idClient=:idClient', Order.addOrderTemporal)
 
+    // musatra las ordenes todas las ordenes  temporales aue elusuarioa tiene agragdas en la lista  de ordenes
 route.get('/order/show/all/list/idClient=:idClient', Order.showAllMenusforUser);
 
+    //cancela unaorden de la lista de ordenes
+route.patch('/order/cancelar/idOrden=:idOrden', Order.cancelarOrdenTemporal);
 // end order temporal
 
 route.post('/order/add/idcliente=:idcliente', Order.newOrder)

@@ -4,24 +4,27 @@ const Order = require('../../../database/collection/orden');
 const OrderTemporal = require('../../../database/collection/ordenTeporal');
 const User = require('../../../database/collection/user');
 const Restaurnte = require('../../../database/collection/restaurant');
+const { Router } = require('express');
 
 // add orden temporal
 const addOrderTemporal = async (req, res) =>{
 
     console.log(req.body);
+    
     var idClient  = req.params.idClient;
     var results = await OrderTemporal.orderTemporal.find({idClient:idClient});
     if(results.length === 0){
         
         let newOrder = new OrderTemporal.orderTemporal({
+
             idMenu         : req.body.idMenu,      
             idClient       : req.params.idClient,       
             idRestaurant   : req.body.idRestaurant,
             nameMenu       : req.body.nameMenu,
             precioUnitario : req.body.precioUnitario,
             fotoProducto   : req.body.urlFotoProducto,
-            cantidad       : 0, 
-            precio_cantidad_tocal : 0
+            cantidad       : 1, 
+            precio_cantidad_tocal : req.body.precioUnitario * 1
             
         })
 
@@ -41,6 +44,7 @@ const addOrderTemporal = async (req, res) =>{
            if(searchMenu.length > 0) return res.status(200).send({message:"El menu ya fue añadido"});
 
             if(searchMenu.length === 0){
+
                 let newOrder2 = new OrderTemporal.orderTemporal({
                     idMenu         : req.body.idMenu,      
                     idClient       : req.params.idClient,       
@@ -48,8 +52,8 @@ const addOrderTemporal = async (req, res) =>{
                     nameMenu       : req.body.nameMenu,
                     precioUnitario : req.body.precioUnitario,
                     fotoProducto   : req.body.urlFotoProducto,
-                    cantidad       : 0, 
-                    precio_cantidad_tocal : 0
+                    cantidad       : 1, 
+                    precio_cantidad_tocal : req.body.precioUnitario * 1
                     
                 })
 
@@ -67,16 +71,34 @@ const addOrderTemporal = async (req, res) =>{
 
 } 
 
+const cancelarOrdenTemporal =async (req, res) => {
 
+    //recibe "rejected"
+ 
+ var stateOrdenClient = "rejected"
 
+  var result = await  OrderTemporal.orderTemporal.findById({_id:req.params.idOrden});
+console.log(result)
+  if(result){
+    OrderTemporal.orderTemporal.findByIdAndUpdate({_id:req.params.idOrden},{stateOrdenClient},(error, succes)=>{
+        console.log(succes);
+        if(error) return res.status(400).send({error:"error al cancelar la orden"});
+        if(succes){
+            res.status(200).send({message:"ok",stateOrden:"Se conselo la orden",succes});
+        }
+    });
+  }
+}
+
+// muestra todas las oirdenes temporles
 const showAllMenusforUser = async (req , res) =>{
 
     var IDCLIENT = req.params.idClient
 
     try {
-        var results = await OrderTemporal.orderTemporal.find({idClient: req.params.idClient}).sort({dateOrderTempora:-1});
+        var results = await OrderTemporal.orderTemporal.find({idClient: req.params.idClient,stateOrdenClient:"aggregated"}).sort({dateOrderTempora:-1});
         if(results.length > 0) {
-            res.status(400).send({message:'ok',idClient: IDCLIENT, results:results.length,litsOrdenes:results})
+            res.status(200).send({message:'ok',idClient: IDCLIENT, results:results.length,litsOrdenes:results})
         }
     } catch (error) {
         res.status(400).send({error: "error en la consulta de las orddenes"});
@@ -194,6 +216,7 @@ const listAllOders = async (req, res) =>{
 
 module.exports = {
     addOrderTemporal,
+    cancelarOrdenTemporal,
     showAllMenusforUser,
     newOrder,
     listAllOders,
