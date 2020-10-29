@@ -105,6 +105,58 @@ const showAllMenusforUser = async (req , res) =>{
     }
 }
 
+// actuliza los precios de los productos
+
+const updateCantidadProducto = async (req, res) =>{
+    
+    var result = await OrderTemporal.orderTemporal.findById({_id : req.params.idOrdenTemporal});
+    console.log(result);
+    if(result){
+        
+
+        var updateCantidad =await { cantidad : req.body.cantidad };
+
+        var precioCantidadTotal = await { precio_cantidad_tocal : result.precioUnitario * req.body.cantidad };
+
+        console.log("resultados");
+        console.log(updateCantidad.cantidad, precioCantidadTotal.precio_cantidad_tocal);
+
+        OrderTemporal.orderTemporal.findByIdAndUpdate({_id : req.params.idOrdenTemporal},updateCantidad,(error,restulUpdate)=>{
+            if(error) return res.status(400).send({error:"error al actualizar la cantidad de  la orden"});
+            OrderTemporal.orderTemporal.findByIdAndUpdate({_id : req.params.idOrdenTemporal},precioCantidadTotal,(error2,restulUpdate2)=>{
+                if(error2) return res.status({error:"error al actualizar el precio total de un prodcuto temporal"})
+                OrderTemporal.orderTemporal.findById({_id : req.params.idOrdenTemporal},(error3, result3)=>{
+        
+                    res.status(200).send({message:"ok",precioOrdenTemporalActuzliado:result3})
+                });
+                
+            });
+        });
+      
+    }
+}
+
+const calcularCostoTotalOrdenTemporal = async (req, res) => {
+    var IDCLIENT = req.params.idClient
+
+    try {
+        var results = await OrderTemporal.orderTemporal.find({idClient: req.params.idClient,stateOrdenClient:"aggregated"}).sort({dateOrderTempora:-1});
+        if(results.length > 0) {
+            var sum=0;
+            for (let i = 0; i < results.length; i++) {
+
+                sum = await sum + results[i].precio_cantidad_tocal;
+                
+            }
+
+            res.status(200).send({message:'ok',idClient: IDCLIENT, prcioTotalCantidad:sum})
+        }
+    } catch (error) {
+        res.status(400).send({error: "error en la consulta de las orddenes"});
+    }
+
+}
+
 
 // confirmar pedido  y agegar a nueva order
 const newOrder = async (req, res) => {
@@ -218,6 +270,8 @@ module.exports = {
     addOrderTemporal,
     cancelarOrdenTemporal,
     showAllMenusforUser,
+    updateCantidadProducto,
+    calcularCostoTotalOrdenTemporal,
     newOrder,
     listAllOders,
     listOrderForIdCliente,

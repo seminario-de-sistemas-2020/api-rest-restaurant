@@ -34,6 +34,7 @@ const uploadFile = (req, res)=>{
         upload(req, res,async(err)=>{
             console.log('arrived file api');
             console.log(req.file)
+            
             if(!req.file)return res.status(400).send({error:'file is requered, restaurant'})
             console.log(req.params.idrestaurant)
             console.log(req.params.file)

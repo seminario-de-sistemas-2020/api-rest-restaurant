@@ -9,6 +9,7 @@ const ApiInfo = require('./apiInfo');
 const Menu = require('./menu');
 const User = require('./users');
 const Order = require('./ordenes');
+const orden = require('../../../database/collection/orden');
 
 
 route.get('/', (req, res, next)=>{
@@ -69,7 +70,14 @@ route.get('/order/show/all/list/idClient=:idClient', Order.showAllMenusforUser);
 
     //cancela unaorden de la lista de ordenes
 route.patch('/order/cancelar/idOrden=:idOrden', Order.cancelarOrdenTemporal);
+
+//actualizar el precio 
+route.patch('/order/update/producto/cantidad/idOrdenTemporal=:idOrdenTemporal', Order.updateCantidadProducto)
+
+route.get('/order/calcular/preciototal/idClient=:idClient', Order.calcularCostoTotalOrdenTemporal)
 // end order temporal
+
+
 
 route.post('/order/add/idcliente=:idcliente', Order.newOrder)
 
